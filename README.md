@@ -1,72 +1,37 @@
 # BT01 - CI đa phiên bản JDK với Matrix Strategy
 
-## 1. Tạo file `.github/workflows/ci-matrix.yml`
+## Workflow
 
-```yaml
-name: CI Matrix
+File `.github/workflows/ci-matrix.yml` chạy khi push vào `main` với ma trận Java 17 và 21, dùng `actions/checkout@v5`, `actions/setup-java@v5`, Temurin và Gradle cache.
 
-on:
-  push:
-    branches: [main]
+## Kết quả chạy thật
 
-jobs:
-  test-matrix:
-    name: Test on Java ${{ matrix.java-version }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java-version: ['17', '21']
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
-        with:
-          java-version: ${{ matrix.java-version }}
-          distribution: 'temurin'
-          cache: 'gradle'
-      - run: chmod +x gradlew
-      - run: ./gradlew test
-```
-
-## 2. Push code lên nhánh main
-
-```bash
-git add .github/workflows/ci-matrix.yml
-git commit -m "ci: matrix test JDK 17 va 21"
-git push origin main
-```
-
-## 3. Kết quả trên tab Actions
-
-Job `test-matrix` tách thành 2 sub-job chạy song song:
+Run: https://github.com/IT209-K24-LePhuThinh/SS12-BT01/actions/runs/38770533536
 
 ```text
-CI Matrix
-  Test on Java 17    ✓  (1m 42s)
-  Test on Java 21    ✓  (1m 55s)
+Test on Java 17    success    2026-10-15 16:37:20 - 16:37:57 UTC
+Test on Java 21    success    2026-10-15 16:37:20 - 16:38:04 UTC
 
-Test on Java 17
-  Set up job                                  ✓
-  Run actions/checkout@v5                     ✓
-  Run actions/setup-java@v5                   ✓
-    java-version: 17
-    distribution: temurin
-    cache: gradle
-  Run chmod +x gradlew                        ✓
-  Run ./gradlew test                          ✓
-    > Task :test
-    BUILD SUCCESSFUL in 38s
-    4 actionable tasks: 4 executed
+Java 17
+  java-version: 17
+  distribution: temurin
+  cache: gradle
+  > Task :test
+  BUILD SUCCESSFUL in 30s
+  2 actionable tasks: 2 executed
 
-Test on Java 21
-  Set up job                                  ✓
-  Run actions/checkout@v5                     ✓
-  Run actions/setup-java@v5                   ✓
-    java-version: 21
-    distribution: temurin
-    cache: gradle
-  Run chmod +x gradlew                        ✓
-  Run ./gradlew test                          ✓
-    > Task :test
-    BUILD SUCCESSFUL in 44s
-    4 actionable tasks: 4 executed
+Java 21
+  java-version: 21
+  distribution: temurin
+  cache: gradle
+  > Task :test
+  BUILD SUCCESSFUL
+```
+
+## Cấu hình chính
+
+```yaml
+strategy:
+  matrix:
+    java-version: ['17', '21']
 ```
